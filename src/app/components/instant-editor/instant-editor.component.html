@@ -1,7 +1,21 @@
+<!-- .editor-background holds the process html from the .editor's value. -->
 <div
 	class="instant-editor-component__editor-background editor-background"
 	#editorBackground
-	[innerHTML]="editorString"
 	contenteditable
+	autocapitalize="off"
+	spellcheck="false"
+	[innerHTML]="editorString"
 ></div>
-<textarea class="instant-editor-component__editor editor" #editor></textarea>
+<!--
+ .editor is the where user writes its content into. But writing from the .editor is hidden by setting
+ the color to transparent. This way user actually uses a textarea but views the processed result from the
+ .editor-background.
+ -->
+<textarea
+	class="instant-editor-component__editor editor"
+	#editor
+	autocomplete="off"
+	autocapitalize="off"
+	spellcheck="false"
+></textarea>
