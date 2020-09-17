@@ -37,6 +37,7 @@ export class InstantEditorComponent implements AfterViewInit, OnDestroy {
 	private editorElement: HTMLTextAreaElement;
 	private editorBackgroundElement: HTMLDivElement;
 	private editorResizeObserver: ResizeObserver;
+	private hasTrailingSpace: boolean;
 
 	public editorString: string;
 	public processing: boolean;
@@ -106,11 +107,15 @@ export class InstantEditorComponent implements AfterViewInit, OnDestroy {
 				this.processing = true;
 				this.saveCaretPosition();
 				const script = this.editorElement.value;
+				this.hasTrailingSpace = this.editorElement.value.slice(-1)[0] === ' ';
 				const analysisResult: ScriptAnalysis = await this.scriptAnalysisHttpService
 					.postScriptAnalysis(script)
 					.toPromise();
 				this.processing = false;
 				if (analysisResult.phrase !== '') {
+					if (this.hasTrailingSpace) {
+						analysisResult.phrase += ' ';
+					}
 					this.scriptAnalysis = analysisResult;
 					this.processAndSyncScript(this.scriptAnalysis.phrase);
 					this.editorElement.value = this.scriptAnalysis.phrase;
