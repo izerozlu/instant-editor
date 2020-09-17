@@ -1,4 +1,4 @@
-@import "~src/assets/style/colors";
+@import '~src/assets/style/colors';
 
 @mixin editor-base {
 	font-family: sans-serif;
@@ -53,4 +53,10 @@
 
 .editor-background {
 	@include editor-base;
+}
+
+.instant-editor-component__processing-label {
+	position: absolute;
+	bottom: -16px;
+	right: 0;
 }

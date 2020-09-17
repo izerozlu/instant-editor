@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { ScriptAnalyzerHttpService } from '../../services/script-analyzer-http.service';
-import { debounceTime, tap } from 'rxjs/operators';
+import { debounceTime, filter, tap } from 'rxjs/operators';
 import { ScriptAnalysis } from '../../models/script-analysis';
 import ResizeObserver from 'resize-observer-polyfill';
 import { CLASS_NAMES } from '../../constants/class-names.constant';
@@ -39,6 +39,7 @@ export class InstantEditorComponent implements AfterViewInit, OnDestroy {
 	private editorResizeObserver: ResizeObserver;
 
 	public editorString: string;
+	public processing: boolean;
 
 	constructor(
 		private elementRef: ElementRef,
@@ -98,15 +99,23 @@ export class InstantEditorComponent implements AfterViewInit, OnDestroy {
 		const subscription = fromEvent(this.editorElement, 'input')
 			.pipe(
 				tap(() => this.processAndSyncScript(this.editorElement.value)),
-				debounceTime(500)
+				debounceTime(500),
+				filter(() => Boolean(this.editorElement.value))
 			)
 			.subscribe(async () => {
+				this.processing = true;
 				this.saveCaretPosition();
 				const script = this.editorElement.value;
-				this.scriptAnalysis = await this.scriptAnalysisHttpService.postScriptAnalysis(script).toPromise();
-				this.processAndSyncScript(this.scriptAnalysis.phrase);
-				this.editorElement.value = this.scriptAnalysis.phrase;
-				this.loadCaretPosition();
+				const analysisResult: ScriptAnalysis = await this.scriptAnalysisHttpService
+					.postScriptAnalysis(script)
+					.toPromise();
+				this.processing = false;
+				if (analysisResult.phrase !== '') {
+					this.scriptAnalysis = analysisResult;
+					this.processAndSyncScript(this.scriptAnalysis.phrase);
+					this.editorElement.value = this.scriptAnalysis.phrase;
+					this.loadCaretPosition();
+				}
 			});
 		this.subscriptionHandlerService.addSubscription(subscription);
 	}

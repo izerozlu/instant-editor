@@ -28,6 +28,10 @@ export class ScriptAnalysis {
 		this._undefinedList = undefinedList;
 	}
 
+	static generateEmpty(): ScriptAnalysis {
+		return new ScriptAnalysis({ phrase: '', undefinedList: [], grayListed: [], blackListed: [] });
+	}
+
 	get phrase(): string {
 		return this._phrase;
 	}
