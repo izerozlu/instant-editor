@@ -193,11 +193,15 @@ class InstantEditorComponent {
             this.processing = true;
             this.saveCaretPosition();
             const script = this.editorElement.value;
+            this.hasTrailingSpace = this.editorElement.value.slice(-1)[0] === ' ';
             const analysisResult = yield this.scriptAnalysisHttpService
                 .postScriptAnalysis(script)
                 .toPromise();
             this.processing = false;
             if (analysisResult.phrase !== '') {
+                if (this.hasTrailingSpace) {
+                    analysisResult.phrase += ' ';
+                }
                 this.scriptAnalysis = analysisResult;
                 this.processAndSyncScript(this.scriptAnalysis.phrase);
                 this.editorElement.value = this.scriptAnalysis.phrase;
@@ -551,7 +555,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/izer/Projects/sikayetvar-editor/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/izer/Projects/instant-editor/src/main.ts */"./src/main.ts");
 
 
 /***/ })

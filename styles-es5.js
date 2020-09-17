@@ -464,7 +464,7 @@
     /***/
     function _(module, exports, __webpack_require__) {
       module.exports = __webpack_require__(
-      /*! /home/izer/Projects/sikayetvar-editor/src/styles.scss */
+      /*! /home/izer/Projects/instant-editor/src/styles.scss */
       "./src/styles.scss");
       /***/
     }

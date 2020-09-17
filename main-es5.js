@@ -399,21 +399,26 @@
                         this.processing = true;
                         this.saveCaretPosition();
                         script = this.editorElement.value;
-                        _context.next = 5;
+                        this.hasTrailingSpace = this.editorElement.value.slice(-1)[0] === ' ';
+                        _context.next = 6;
                         return this.scriptAnalysisHttpService.postScriptAnalysis(script).toPromise();
 
-                      case 5:
+                      case 6:
                         analysisResult = _context.sent;
                         this.processing = false;
 
                         if (analysisResult.phrase !== '') {
+                          if (this.hasTrailingSpace) {
+                            analysisResult.phrase += ' ';
+                          }
+
                           this.scriptAnalysis = analysisResult;
                           this.processAndSyncScript(this.scriptAnalysis.phrase);
                           this.editorElement.value = this.scriptAnalysis.phrase;
                           this.loadCaretPosition();
                         }
 
-                      case 8:
+                      case 9:
                       case "end":
                         return _context.stop();
                     }
@@ -1028,7 +1033,7 @@
     /***/
     function _(module, exports, __webpack_require__) {
       module.exports = __webpack_require__(
-      /*! /home/izer/Projects/sikayetvar-editor/src/main.ts */
+      /*! /home/izer/Projects/instant-editor/src/main.ts */
       "./src/main.ts");
       /***/
     }
